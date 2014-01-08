@@ -1,4 +1,4 @@
 Mickey-.github.io
 =================
 
-重定向github page 到个人博客，just so so
+这里放了一些平时写的文章或碎碎念，与[http://itaofe.info](爱淘FE)同步
