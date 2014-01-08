@@ -30,7 +30,7 @@ OSX 10.9 终端（bash已换为更牛叉的[zsh + oh my zsh](https://github.com/
 
 > Strange that I am now having the same problem myself. Expect a fix soonish.
 
-不是上述问题，就去看下原装vim7.3如何，打开一个css文件，顿时五颜六色亮瞎眼。
+既然很可能不是插件问题，那就先看下原装vim7.3如何，打开一个css文件，顿时五颜六色亮瞎眼。
 
 ![vim-css-color效果](http://ap.github.io/vim-css-color/screenshot.png)    
 
