@@ -26,4 +26,4 @@ OSX 10.9 终端（bash已换为更牛叉的[zsh](#))由于没有以前使用的a
 
 ## 分析
 
-最开始是担心插件位置放错或者需要在```.vimrc```写配置,折腾一番后发现不是这个原因（该插件不需要额外配置，```let g:cssColorVimDoNotMessMyUpdatetime = 1```即使不配置也可以正常使用插件）
+最开始是担心插件位置放错或者需要在`.vimrc`写配置,折腾一番后发现不是这个原因（该插件不需要额外配置，`let g:cssColorVimDoNotMessMyUpdatetime = 1`即使不配置也可以正常使用插件）
