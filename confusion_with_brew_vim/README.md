@@ -26,8 +26,14 @@ OSX 10.9 终端（bash已换为更牛叉的[zsh + oh my zsh](https://github.com/
 
 最开始是担心插件位置放错或者需要在`.vimrc`写配置,折腾一番后发现不是这个原因（该插件不需要额外配置，`let g:cssColorVimDoNotMessMyUpdatetime = 1`即使不配置也可以正常使用插件）
 
-不是上述问题，就去看下原装vim7.3如何，打开一个css文件，顿时五颜六色亮瞎眼。  
+然后去github看下issue，还真有人提出了这个问题，在[issues#29 css-color stopped working after updating Vim to 7.4](https://github.com/ap/vim-css-color/issues/29),有一番讨论，我也反映了下关于vim和macvim该插件表现不同的情况,最后作者ap也表示－ －  
+
+> Strange that I am now having the same problem myself. Expect a fix soonish.
+
+不是上述问题，就去看下原装vim7.3如何，打开一个css文件，顿时五颜六色亮瞎眼。
+
 ![vim-css-color效果](http://ap.github.io/vim-css-color/screenshot.png)    
+
 o了，那就确认可能是版本问题,我通过brew安装的vim版本是vim7.4.052,官网此时说明是_Vim 7.4.135 is the current versions_,可能是新版本修复了bug，于是通过brew更新vim但是却被提示已是最新版本。
 
     ➜  www  brew upgrade vim
