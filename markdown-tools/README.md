@@ -20,7 +20,7 @@ Markdown简介和几个工具推荐
 
 以上特性大大提高编写效率，比word那种需要大量精力关注排版的工具软件更适于editing，并在流畅书写和印刷级阅读体验之间找到了平衡。 
 
-对于MD的推广来说，编程人员首当其冲，而被用为 GitHub 和  StackOverFlow 的御用书写格式，也贡献了一分力量。
+对于MD的推广来说，编程人员首当其冲，而被用为 GitHub 和  StackOverFlow 的御用书写格式，也贡献了一份力量。
 
 ----------
 
@@ -34,7 +34,8 @@ Markdown简介和几个工具推荐
 
 - web版
     - [stackedit](https://stackedit.io/)——华丽功能强大，有小白提示工具，感觉最好
-    - [mdeditor](http://www.zybuluo.com/mdeditor)——国人出品里比较精致的了    - [mahua](http://mahua.jser.me/)——国人出品，最早接触
+    - [mdeditor](http://www.zybuluo.com/mdeditor)——国人出品里比较精致的了
+    - - [mahua](http://mahua.jser.me/)——国人出品，最早接触 
     - [dillinger](http://dillinger.io/)——支持github导入，简单朴素
     - [markable](http://markable.in/)——功能罗列很多，注重持久化
     - etc。。。web端的真的很多，大家按喜好选一个吧
@@ -46,7 +47,7 @@ Markdown简介和几个工具推荐
 
 ## 关于扩展语法
 
-上面说了，MD语法发展到现在，官方的原始语法（遵循大道至简的精神）虽然精要，但慢慢难以满足各种越发被挖掘出的需求。比如各种特殊格式，上面的工具软件大都有所扩展。Github做的不错，希望考研成为事实标准，语法可以看看[GitHub Flavored Markdown](https://help.github.com/articles/github-flavored-markdown)
+上面说了，MD语法发展到现在，官方的原始语法（遵循大道至简的精神）虽然精要，但慢慢难以满足各种越发被挖掘出的需求。比如各种特殊格式，上面的工具软件大都有所扩展。Github做的不错，希望可以成为事实标准，语法可以看看[GitHub Flavored Markdown](https://help.github.com/articles/github-flavored-markdown)
 
 大家有什么好的MD工具软件，不论在线的还是客户端软件，欢迎留言补充 : )
 
