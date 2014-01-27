@@ -49,3 +49,10 @@ Markdown简介和几个工具推荐
 上面说了，MD语法发展到现在，官方的原始语法（遵循大道至简的精神）虽然精要，但慢慢难以满足各种越发被挖掘出的需求。比如各种特殊格式，上面的工具软件大都有所扩展。Github做的不错，希望考研成为事实标准，语法可以看看[GitHub Flavored Markdown](https://help.github.com/articles/github-flavored-markdown)
 
 大家有什么好的MD工具软件，不论在线的还是客户端软件，欢迎留言补充 : )
+
+
+----------------------------补充-----------------------
+感谢 云翮 ， 烧鹅
+
+- [Rock_Markdown](https://github.com/superRaytin/Rock_Markdown) 暴漫风:-P
+- [chrome插件markdown-reader](https://chrome.google.com/webstore/detail/markdown-reader/gpoigdifkoadgajcincpilkjmejcaanc) 来自王一
