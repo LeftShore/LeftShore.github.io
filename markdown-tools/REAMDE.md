@@ -35,7 +35,7 @@ Markdown简介和几个工具推荐
 - web版
     - [stackedit](https://stackedit.io/)——华丽功能强大，有小白提示工具，感觉最好
     - [mdeditor](http://www.zybuluo.com/mdeditor)——国人出品里比较精致的了    - [mahua](http://mahua.jser.me/)——国人出品，最早接触
-    - [http://dillinger.io/](dillinger)——支持github导入，简单朴素
+    - [dillinger](http://dillinger.io/)——支持github导入，简单朴素
     - [markable](http://markable.in/)——功能罗列很多，注重持久化
     - etc。。。web端的真的很多，大家按喜好选一个吧
 - 客户端
