@@ -6,13 +6,11 @@
 
 如果喜欢更底层的Javascript的矢量库，或许你会钟意[raphael](raphaeljs.com/)    
 本土化做的相当靠谱的2个图表也可以满足很多中小企业的需求，如[echarts](http://echarts.baidu.com/)、[kcharts](kcharts.net)，同样很强大。      
-
+![highcharts](http://itaofe.info/wp-content/uploads/2014/03/highcharts.jpg 'highcharts highmaps')
 
 ## 背景
 
 原本项目中需要用的图表，大都是highcharts，只是之前他一直没有成熟的地图数据展示图表，即使今年推出了highmaps，也因为没有做本地化而没有中国数据，导致思路就是引用kcharts完成地图数据展示。而现在利用highcharts则可以封装一套基于highmaps的本地化地图图表展示组件。
-
-## 特点
 
 ## highmaps 上手
 
@@ -100,3 +98,4 @@ Hightmaps 也有对[GeoJSON](http://en.wikipedia.org/wiki/GeoJSON)标准的基�
 1. 为使添加的数据能在地图里正常渲染，每个数据点必须有一些id来关联到```mapData```里相同的id。这些id之后会被指定在[joinBy](http://api.highcharts.com/highmaps#plotOptions.series.joinBy)参数。
 2. 另一个方法是跳过```mapData```，直接设置```path```在data上。这种方式混合了数据和结构，一般来说不推荐，但他会使系统表现的更快速，可能更适合超大规模数据且你有静态数据支持的情况考虑采用。
 
+## 待续
