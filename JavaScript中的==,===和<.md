@@ -88,6 +88,7 @@ ctx.stroke();
 得到的结果如下图
 
 <canvas id="drawCanvas1" width="500" height="500" />
+<script type="text/javascript">
 var cmp = function(v1, v2) { return v1 == v2; };
 var vals = [
     ["false", function() { return false; }], 
@@ -152,7 +153,7 @@ for (var i = 0; i <= n; i++) {
     ctx.lineTo(p+r*n, p+r*i);
 }
 ctx.stroke();
-
+</script>
 
 ## < 的结果整理
 
