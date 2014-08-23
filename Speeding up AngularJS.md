@@ -40,4 +40,24 @@ Angular最近的几次更新中引入了一个很有用的功能：一次性的�
 $scope.$apply被设计用来告诉Angular一个Model在他的生命周期&监控范围外发生了变化，仅此而已。我们调用他只是告诉Angular去更新一下$scope下的各Model。在正确的时机使用他非常重要，否则会降低应用性能。如果在不合适的时机使用他，还会被抛出一些 errors，比如“堆积过高的调用栈”。
 
 我们通常使用三方插件，他们可能在Angular管理之外改变了DOM，此时就是$scope.$apply方法须要出场的时候了：    
-当DOM更新完毕后（需要这层逻辑处于可控状态），调用$scope.$apply方法，他会在内部开始$digest循环，从而达到在Angular体系外更新模型。
+当DOM更新完毕后（需要这层逻辑处于可控状态），调用$scope.$apply方法，他会在内部开始$digest循环，从而达到在Angular体系外更新模型。实现形式可能是这样：
+```
+$(selector).dialog({
+  okHide: function () {
+    $(this).val('xxx');
+    $scope.$apply();
+  }
+});
+```
+执行后会通过$rootScope.$digest()使应用开始同步数据变更，这也就是$digest循环是如何在内部被激活的。这个循环会处理调用$scope下所有的watchers直到监听器全部触发完。简单场景下处理是相当迅速的，随时间推移应用庞大后就可能会变慢了。
+
+代替直接$scope.$apply()的方案是使用$scope.$digest，他会执行同样的$digest循环，但只在当前$scope及子$scope下执行， 相比起来开销就小多了 
+
+这个途径唯一的风险是,如果该作用域和父$scope的Model间还有联动关系，父$scope下不会产生变化，因为$scope.$digest只会以当前$scope节点开始进行深度遍历，不会向上追溯整个$scope树。如果有这种情况，那只能乖乖的使用$scope.$apply跑完整个循环。
+
+### 可能的话避免使用ng-repeat指令
+
+经常不知名的坑就潜伏在我们最常用的那些事物，比如ng-repeat。涉及CURD的ng-repeat当然不能动，但也有不少并无逻辑或轻逻辑的循环结构被我们直接ng-repeat渲染出来。从这个角度看ng-repeat，还是很容易被滥用，直接拖累着$digest循环。
+我们已经知道少量的绑定增加就会带来更大的多的$digest循环开销，从指令方面来说，创造一个可能的静态渲染组件，并在真正需要外都独立在Angular监控体系外是相当有用的。
+
+一个想法是，通过$interpolate provider 来获取对象编译渲染静态模板，并将其插入DOM节点，对像navigation的模块还是很有效的。总之应该保持对隐式创建的watch对象的留心。比如在想好应用结构、coding前关心一下自己可以减少多少个watchers。
