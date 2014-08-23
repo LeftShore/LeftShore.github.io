@@ -31,7 +31,7 @@ Angular最近的几次更新中引入了一个很有用的功能：一次性的�
 
 这样当Angular按常规处理完DOM和该变量后，他会在内部$$watchers的监控列表中删除这些一次性变量。
 
-这非常有用了。我们知道因为便捷背后的Dirty Checking，当Angular管理有2000个双向绑定时，应用的反应速度就会可感知的变慢。越少的绑定数量对应用的性能加速越好。这种做法简单快速，可以有效减少$$watcher的负担。
+这非常有用了。我们知道因为便捷背后的Dirty Checking，当Angular管理有2000个双向绑定时(比如各种云盘文件列表页)，应用的反应速度就会可感知的变慢。越少的绑定数量对应用的性能加速越好。这种做法简单快速，可以有效减少$$watcher的负担。
 
 ### $scope.$apply() or $scope.$digest()？
 
@@ -49,15 +49,67 @@ $(selector).dialog({
   }
 });
 ```
-执行后会通过$rootScope.$digest()使应用开始同步数据变更，这也就是$digest循环是如何在内部被激活的。这个循环会处理调用$scope下所有的watchers直到监听器全部触发完。简单场景下处理是相当迅速的，随时间推移应用庞大后就可能会变慢了。
+执行后会通过$rootScope.$digest()使应用开始同步数据变更，这也就是$digest循环是如何在内部被激活的。这个循环会处理调用根$scope下所有的watchers直到监听器全部触发完。简单场景下处理是相当迅速的，随时间推移应用庞大后就可能会变慢了。
 
 代替直接$scope.$apply()的方案是使用$scope.$digest，他会执行同样的$digest循环，但只在当前$scope及子$scope下执行， 相比起来开销就小多了 
 
-这个途径唯一的风险是,如果该作用域和父$scope的Model间还有联动关系，父$scope下不会产生变化，因为$scope.$digest只会以当前$scope节点开始进行深度遍历，不会向上追溯整个$scope树。如果有这种情况，那只能乖乖的使用$scope.$apply跑完整个循环。
+这个途径唯一的风险是,如果该作用域和父$scope的Model间还有联动关系，父$scope下不会产生变化，因为$scope.$digest只会以当前$scope节点开始进行深度遍历，[不会向上追溯整个$scope树](http://stackoverflow.com/questions/12333410/why-scope-apply-calls-rootscope-digest-rather-than-this-digest)。如果有这种情况，那只能乖乖的使用$scope.$apply跑完整个循环。
 
 ### 可能的话避免使用ng-repeat指令
 
-经常不知名的坑就潜伏在我们最常用的那些事物，比如ng-repeat。涉及CURD的ng-repeat当然不能动，但也有不少并无逻辑或轻逻辑的循环结构被我们直接ng-repeat渲染出来。从这个角度看ng-repeat，还是很容易被滥用，直接拖累着$digest循环。
+经常不知名的坑就潜伏在我们最常用的那些事物，比如ng-repeat。涉及CURD的ng-repeat当然不能动，但也有不少并无逻辑或轻逻辑的循环结构被我们直接ng-repeat渲染出来。从这个角度看ng-repeat，还是很容易被滥用，直接拖累着$digest循环。     
 我们已经知道少量的绑定增加就会带来更大的多的$digest循环开销，从指令方面来说，创造一个可能的静态渲染组件，并在真正需要外都独立在Angular监控体系外是相当有用的。
 
 一个想法是，通过$interpolate provider 来获取对象编译渲染静态模板，并将其插入DOM节点，对像navigation的模块还是很有效的。总之应该保持对隐式创建的watch对象的留心。比如在想好应用结构、coding前关心一下自己可以减少多少个watchers。
+
+## 适当的直接操作DOM
+
+是的，某些情况下很有必要这样做。
+
+比如另一个可能造成$$watcher数量攀升的是Angular核心指令的滥用，比如常见de ng-show/ng-hide。他们不会直接造成什么大损耗，但可能隐藏在ng-repeat的使用后造成数量急剧增加。
+
+对无逻辑或轻逻辑的的list，比如仅仅是切换show/hide，稍微变换下方式会更有意义。比如下面常见的使用方式：
+```
+<li ng-show=”bool”></li>
+//blabla
+$scope.bool = false;
+$scope.toggleBool = function () {
+  $scope.bool = true;
+};
+```
+如果创建的指令以及他的逻辑并不需要Model支持，那么不要将他包装为Angular形式。
+```
+var $obj = $(selector);
+$obj.hide();
+$scope.toggleShow = function () {
+  $obj.show();
+};
+```
+这种情况下，比起通过$scope设置Model值为false/true再通过隐式$apply变更视图，更好的做法是直接通过.hide()/.show()方法调用来实现同样的逻辑。    
+再比如Angular提供的指令ng-click等，他们在内部做的事情可不止绑定一个事件监听器，还会变成$digest循环的一部分并增添的应用的负担，而这块可能根本不需要这样做。在指令link回调中，应该更提倡使用原生或jQuery的添加事件监听的方法。
+
+这样做可能很好的帮我们分离Angular逻辑无须他介入的场景。在这个例子里，我们不依赖通过在指令里改变Model来显示/隐藏元素，而是直接像普通DOM那样修改，节省了$$watchers也就加速了应用。
+
+### 节制DOM过滤器的使用
+
+Angular过滤器非常简单易用，变量后插入管道符再加过滤器名称就OK了。然而一旦某些东西变化了，每个过滤器在每次$digest循环里会执行2次。这还是蛮繁重的。    
+其中第一次运行是源自$$watchers检测任何变化，第二次运行是看是否存在在上次循环里又变化的需要更新的数据。      
+
+下面是一个过滤器的例子，最慢的使用方式。
+```
+{{ filter_expression | filter : expression : comparator }}
+```
+如果能避免使用inline过滤器语法，并预处理我们的数据而不是等到$digest的时候，性能就会优化不少。    
+Angular自带的```$filter```provider可以让我们的filter在编译到DOM中之前进行一些逻辑处理，比如在把数据发送到View前进行预处理，也就避免了编译到DOM阶段的开销。
+```
+$filter('filter')(array, expression, comparator);
+```
+
+## 一点小结
+
+上面讨论的一些关注点可以可以帮助我们开发性能更优异的应用，下面是一些建议小节。
+
+* 在进入coding前，考虑一下怎样设计应用框架可以避免因Dirty Check造成的性能损耗。
+* 留意ng-repeat,使用场景会存在复杂前端逻辑吗，不要滥用，小心他对$digest循环带来的大量开销。
+* Angular不是银弹，不是所有功能都要整成Angular型。在指令里可能有许多case是应该直接操作DOM而不是通过Model。
+* 越多的$$watchers意味着更慢应用，多关注细节使用可能会带来很大的差异：）
