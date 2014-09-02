@@ -1,0 +1,5 @@
+This article demonstrates how to use CSS transforms, perspective and some scaling trickery to create a pure CSS parallax scrolling website.
+
+Parallax is almost always handled with JavaScript and, more often than not, it’s not very performant with the worst offenders listening for the scroll event, modifying the DOM directly in the handler and triggering needless reflows and paints. All this happens out of sync with the browsers rendering pipeline causing dropped frames and stuttered scrolling. Better parallax implementations monitor scrolling and defer DOM updates using requestAnimationFrame which can totally transform the experience – but what if you could remove the JavaScript dependency completely?
+
+Deferring the parallax effect to CSS removes all these issues and allows the browser to leverage hardware acceleration resulting in almost all the heavy lifting being handled directly by the compositor. The result is consistent frame rates and perfectly smooth scrolling. You can also combine the effect with other CSS features such as media queries or supports – responsive parallax anyone?
