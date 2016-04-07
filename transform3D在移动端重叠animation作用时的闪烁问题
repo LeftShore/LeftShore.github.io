@@ -1,0 +1,48 @@
+好吧标题有点长，顺着脑子记下来就这么多字了。。
+
+## 场景复原
+
+最近项目后期发现一个诡异的问题，场景描述：
+
+    当视图切换到最后一页时，动画区域的元素被肢解的七零八落，看起来像是元素被分隔开闪烁着。
+
+这个问题在PC浏览器上是正常的，在移动端的表现却是闪瞎了眼。
+
+## 初体验和发现
+
+经过一阵定位，发现一些端倪：页内如果有2块元素分别做着transform动画，此时若至少有一个元素执行的是3D变形动画，那么这种情况必现。      
+比如一个元素的动画是```-webkit-animation: flipInY 2s 0s;```;      
+另一个元素的动画是```-webkit-animation: fadeInUp 2s 0s;```
+
+那是不是transform3d animation本身触发了某些特性导致问题？之后试着调整二者的动画类型、动画时间，均然并卵。。。
+
+移动端的bug效果演示如下图：
+
+<img src="//g.alicdn.com/sj/activity/bug.gif" style="width:320px"/>
+
+## 继续开扒。。
+
+既然代码级别似乎定位不出什么所以然来，接着试了下从动画渲染原理出发，因为只在移动端出现的问题，考虑到会不会transform3D启用的硬件加速这块出了什么问题。。
+
+那就改了下元素定位，将多个动画元素在屏幕上的 __渲染位置调整到互斥__ 的状态，这时动效正常展示了！        
+顺着这个思路又将元素定位到有重叠的状态，但调整```animation-delay```为不同的值， __动画的执行时机互斥__ ，果然这样调整动效也可以正常展示。
+
+## 结论
+
+综合这2种解决方案，基本结论就是：    
+ __当多个元素在时间或空间重叠的情况下执行transform3D动画时，移动端硬件加速下的动画渲染会使页面严重闪烁__
+
+定位到原因了也就方便进行绕过了，修正前后效果演示如下
+
+<img src="//g.alicdn.com/sj/activity/bug%20fix.gif" style="width:320px"/>
+
+差异还是很明显的，上面说的是“绕过”，要真正解决，或许得靠浏览器硬件加速在渲染层的bugfix了。
+
+## 一些引申资料
+
+google查了下资料，也有些文章提到了overlap&flicker的一些情况和优化：
+
+http://www.html5rocks.com/en/mobile/optimization-and-performance/     
+http://indiegamr.com/ios6-html-hardware-acceleration-changes-and-how-to-fix-them/
+
+大家如果有想法可以从前端角度解决的欢迎拍砖~
